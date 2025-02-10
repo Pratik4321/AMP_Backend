@@ -17,6 +17,9 @@ const recentActivitySchema = new mongoose.Schema({
     timestamp: {
         type: Date,
         default: Date.now
+    },
+    metadata: {
+        type: Object,
     }
 });
 
