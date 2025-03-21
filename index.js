@@ -8,6 +8,12 @@ const FormData = require("./models/form.js");
 const app = express();
 
 app.use(express.json());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://mail.google.com"); // Allow Gmail
+  res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 // Nodemailer transporter setup
@@ -143,28 +149,10 @@ const sendBatchAMPEmails = async (instructors, course) => {
     </div>
 
     <p>Would you be available to teach this course?</p>
-
-    <form method="post" action-xhr="/submit-availability" target="_top">
-      <input type="hidden" name="email" value="${instructor.email}">
-      <input type="hidden" name="course" value="${course.name}">
-      <input type="hidden" name="name" value="${instructor.name}">
-      <input type="hidden" name="instructorId" value="${instructor._id}">
-
-      <div class="form-group">
-        <label>Choose Availability:</label>
-        <div class="radio-group">
-          <input type="radio" id="yes" name="availability" value="Yes" required>
-          <label for="yes">✅ Yes</label>
-          <br>
-        
-
-          <input type="radio" id="no" name="availability" value="No">
-          <label for="no">❌ No</label>
-        </div>
-      </div>
-
-      <button type="submit" class="button">Submit Availability</button>
-    </form>
+   
+     <a href="http://localhost:3001/form?email=${instructor.email}&course=${course.name}&avialability=''&name=${instructor.name}&instructorId=${instructor.id}" target="_blank">
+    <button style="padding: 10px 20px; background-color: green; color: white; border: none; border-radius: 5px;">Confirm in our Website</button>
+  </a>
 
     <p class="footer">If you have any questions, feel free to reach out.</p>
   </div>
@@ -196,6 +184,7 @@ const sendBatchAMPEmails = async (instructors, course) => {
   });
 
   await Promise.all(emailPromises);
+  
 };
 
 // API to send batch emails
@@ -240,6 +229,7 @@ app.post("/submit-availability", async (req, res) => {
 
     res.json({ message: "Availability submitted successfully!" });
   } catch (error) {
+    console.error("Error submitting availability:", error);
     res.status(500).json({ message: "Error submitting availability" });
   }
 });
@@ -259,6 +249,7 @@ app.post("/instructurs", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+
 });
 
 app.get("/instructurs", async (req, res) => {
