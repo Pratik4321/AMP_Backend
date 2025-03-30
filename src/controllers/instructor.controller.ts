@@ -9,7 +9,9 @@ import EmailTrack from "../models/email-track.model";
 export const instructorHandler = asyncHandler(
   async (req: Request, res: Response) => {
     try {
-      const instructor = await Instructor.find().limit(10);
+      const instructor = await Instructor.find()
+        .limit(10)
+        .sort({ createdAt: -1 });
       res.status(200).json(instructor);
     } catch (err) {
       if (err instanceof Error) {
