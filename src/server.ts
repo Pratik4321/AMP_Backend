@@ -3,12 +3,14 @@ dotenv.config();
 
 import app from "./app";
 import { DBConnection } from "./config/db";
+import { initCronJobs } from "./jobs";
 
 const PORT = process.env.PORT || 3000;
 
 function startApp() {
   DBConnection()
     .then((res) => {
+      initCronJobs();
       app.listen(PORT, () => {
         console.log(`
              ---------------------------------------------

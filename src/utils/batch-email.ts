@@ -1,7 +1,10 @@
 import { IInstructor } from "../interfaces/instructor";
 import { transporter } from "../services/email";
 
-export const sendBatchAMPEmails = async (instructors: IInstructor[]) => {
+export const sendBatchAMPEmails = async (
+  instructors: IInstructor[],
+  options?: string
+) => {
   const emailPromises = instructors.map(async (instructor: IInstructor) => {
     const hour = new Date().getHours();
     const greeting =
@@ -139,7 +142,7 @@ export const sendBatchAMPEmails = async (instructors: IInstructor[]) => {
     const mailOptions = {
       from: "Admin <annasfurquan27@gmail.com>",
       to: instructor.Email,
-      subject: `Availability Request for ${instructor.Courses}`,
+      subject: `${options ?? ""} Availability Request for ${instructor.Courses}`,
       html: ampHtml,
       amp: ampHtml,
     };
